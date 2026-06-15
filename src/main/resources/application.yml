@@ -78,7 +78,7 @@ saa:
     fallback-ttl: ${SAA_CACHE_FALLBACK_TTL:PT5M}
 
 mapbox:
-  access-token: ${MAPBOX_ACCESS_TOKEN:pk.eyJ1IjoiY29ybWVub3MiLCJhIjoiY21oMHowMjJsMmpvYzJqcTJ0dDVuYWw5ZyJ9.IXwCQMQVg9zymZNGIyAKNQ}
+  access-token: ${MAPBOX_ACCESS_TOKEN}
   # v6 = Mapbox Search Geocoding API, v5 = Geocoding API clásico (fallback si v6 no retorna resultados)
   geocode-api: ${MAPBOX_GEOCODE_API:v6}
 
