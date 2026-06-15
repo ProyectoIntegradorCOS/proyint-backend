@@ -1,0 +1,104 @@
+name: CI/CD Backend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  AWS_REGION:       us-west-2
+  ECR_REGISTRY:     023894313590.dkr.ecr.us-west-2.amazonaws.com
+  ECR_REPOSITORY:   thaqhiri-dev
+  CONTAINER_NAME:   thaqhiri-backend
+  APP_PORT:         5511
+
+jobs:
+  build-and-push:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    outputs:
+      image_tag: ${{ steps.meta.outputs.image_tag }}
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login a ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Generar tag de imagen
+        id: meta
+        run: echo "image_tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+
+      - name: Build y Push imagen Docker
+        run: |
+          IMAGE=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          docker build -t $IMAGE .
+          docker push $IMAGE
+          docker tag $IMAGE ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+          docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+
+  deploy:
+    name: Deploy en EC2
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    # Solo despliega cuando hay merge a main, no en PRs
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy en EC2 via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            # Login a ECR usando el IAM Role de la EC2 (sin credenciales hardcodeadas)
+            aws ecr get-login-password --region us-west-2 | \
+              docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
+
+            # Pull de la nueva imagen
+            docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+            # Detener y eliminar el contenedor anterior
+            docker stop ${{ env.CONTAINER_NAME }} || true
+            docker rm   ${{ env.CONTAINER_NAME }} || true
+
+            # Correr el nuevo contenedor
+            docker run -d \
+              --name ${{ env.CONTAINER_NAME }} \
+              --restart unless-stopped \
+              -p ${{ env.APP_PORT }}:${{ env.APP_PORT }} \
+              -e SPRING_PROFILES_ACTIVE=dev \
+              -e SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}" \
+              -e SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}" \
+              -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+              ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+            # Limpiar imágenes antiguas para liberar espacio en disco
+            docker image prune -f
