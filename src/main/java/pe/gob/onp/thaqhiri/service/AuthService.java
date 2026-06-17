@@ -2,120 +2,67 @@ package pe.gob.onp.thaqhiri.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import pe.gob.onp.thaqhiri.auth.SaaProperties;
-import pe.gob.onp.thaqhiri.auth.SaaTokenService;
-import pe.gob.onp.thaqhiri.dto.UserResponse;
-import pe.gob.onp.thaqhiri.exception.ResourceNotFoundException;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import pe.gob.onp.thaqhiri.auth.JwtService;
+import pe.gob.onp.thaqhiri.dto.UserResponse;
+import pe.gob.onp.thaqhiri.exception.ResourceNotFoundException;
 
 @Service
 public class AuthService {
 
-	private static final Logger log = LoggerFactory.getLogger(AuthService.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
-    private final SaaProperties saaProperties;
+    private final JwtService jwtService;
     private final UserService userService;
-    private final SaaTokenService tokenService;
+    private final ObjectMapper objectMapper;
 
-    public AuthService(RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper, SaaProperties saaProperties, UserService userService, SaaTokenService tokenService) {
-        this.restTemplate = restTemplateBuilder.build();
-        this.objectMapper = objectMapper;
-        this.saaProperties = saaProperties;
+    public AuthService(JwtService jwtService, UserService userService, ObjectMapper objectMapper) {
+        this.jwtService = jwtService;
         this.userService = userService;
-        this.tokenService = tokenService;
+        this.objectMapper = objectMapper;
     }
 
     public String generarToken(JsonNode requestBody) throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        String usuario = extractField(requestBody, "usuario");
+        String clave   = extractField(requestBody, "clave");
 
-        String bodyJson = objectMapper.writeValueAsString(requestBody);
-        HttpEntity<String> entity = new HttpEntity<>(bodyJson, headers);
-
-        // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-02-09 11:10 UTC-5 (Lima)][desc: Enruta a SAA según payload (semilla vs usuario/clave)][obj: AuthService.generarToken route]
-        String targetUrl = resolveGenerateUrl(requestBody);
-        ResponseEntity<String> response = restTemplate.postForEntity(targetUrl, entity, String.class);
-        String token = response.getBody();
-        if (token == null || token.isBlank()) {
-            throw new IllegalStateException("SAA no devolvió token");
+        if (usuario == null || usuario.isBlank()) {
+            throw new IllegalArgumentException("El campo 'usuario' es requerido");
+        }
+        if (clave == null || clave.isBlank()) {
+            throw new IllegalArgumentException("El campo 'clave' es requerido");
         }
 
-        // Decodificar payload para obtener usuario
-        String[] partes = token.split("\\.");
-        if (partes.length < 2) {
-            throw new IllegalArgumentException("Token inválido");
-        }
+        usuario = usuario.toUpperCase().trim();
 
-        String base64Payload = partes[1];
-        String payloadJson = new String(java.util.Base64.getUrlDecoder().decode(base64Payload));
-        JsonNode payload = objectMapper.readTree(payloadJson);
-
-        String loginUsuarioSaa = payload.has("Usuario") ? payload.get("Usuario").asText() : null;
-        if (loginUsuarioSaa != null) {
-            loginUsuarioSaa = loginUsuarioSaa.toUpperCase();
-        }
-
-        Long idUsuarioSistema = 0L;
+        UserResponse user;
         try {
-            UserResponse userSistema = this.userService.getByUsuario(loginUsuarioSaa);
-            if (userSistema != null) {
-                idUsuarioSistema = userSistema.id();
-            }
-        } catch (ResourceNotFoundException ex) {
-            // En algunos despliegues el usuario aún no está sincronizado en la BD local.
-            // Se devuelve idUsuaSist=0 y el frontend puede disparar el flujo de sincronización.
-        	log.warn("El usuario '" + loginUsuarioSaa + " no se encuentra activo en la base de datos de Thaqhiri.");
-        	//throw(ex);        	
+            user = userService.getByUsuario(usuario);
+        } catch (ResourceNotFoundException e) {
+            throw new IllegalArgumentException("Credenciales inválidas");
         }
+
+        if (!userService.verifyPassword(usuario, clave)) {
+            throw new IllegalArgumentException("Credenciales inválidas");
+        }
+
+        String token = jwtService.generateToken(usuario, user.nombre());
 
         return objectMapper.createObjectNode()
                 .put("token", token)
-                .put("idUsuaSist", idUsuarioSistema)
+                .put("idUsuaSist", user.id())
                 .toString();
     }
 
-    // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-02-09 11:10 UTC-5 (Lima)][desc: Selecciona endpoint SAA según estructura del request][obj: AuthService.resolveGenerateUrl]
-    private String resolveGenerateUrl(JsonNode requestBody) {
-        if (requestBody != null && requestBody.has("usuario")) {
-            final String url = this.saaProperties.getUsuarioGenerateUrl();
-            if (url != null && !url.isBlank()) return url;
-        }
-        return this.saaProperties.getGenerateUrl();
+    public String cerrarSesion(String token) {
+        log.info("Cierre de sesión solicitado");
+        return "{\"mensaje\":\"Sesión cerrada correctamente\"}";
     }
 
-    // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-03-19 UTC-5 (Lima)][desc: Evicta el token del cache Caffeine antes de llamar a SAA para garantizar que no sea aceptado aunque el TTL residual no haya vencido][obj: AuthService.cerrarSesion]
-    public String cerrarSesion(String token) throws Exception {
-        tokenService.evict(token);
-        String url = this.saaProperties.getCloseUrl();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        String bodyJson = "{\"token\":\"" + token + "\"}";
-        HttpEntity<String> entity = new HttpEntity<>(bodyJson, headers);
-
-        ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
-        return response.getBody();
-    }
-
-    public String renovarToken(String token) throws Exception {
-        String url = this.saaProperties.getRenewUrl();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        String bodyJson = "{\"token\":\"" + token + "\"}";
-        HttpEntity<String> entity = new HttpEntity<>(bodyJson, headers);
-
-        ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
-        return response.getBody();
+    private String extractField(JsonNode body, String field) {
+        if (body == null || !body.has(field) || body.get(field).isNull()) return null;
+        return body.get(field).asText();
     }
 }

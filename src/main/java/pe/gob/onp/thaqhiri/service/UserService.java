@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,14 +31,17 @@ public class UserService {
 
 	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository;    
+    private final UserRepository userRepository;
     private final EquipoRepository equipoRepository;
     private final HorarioRepository horarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, EquipoRepository equipoRepository, HorarioRepository horarioRepository) {
+    public UserService(UserRepository userRepository, EquipoRepository equipoRepository,
+            HorarioRepository horarioRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.equipoRepository = equipoRepository;
         this.horarioRepository = horarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private static String determineHost() {
@@ -374,6 +378,13 @@ public class UserService {
     }
     
     
+    @Transactional(readOnly = true)
+    public boolean verifyPassword(String usuario, String rawPassword) {
+        return userRepository.findPasswordHashByUsuario(usuario)
+                .map(hash -> passwordEncoder.matches(rawPassword, hash))
+                .orElse(false);
+    }
+
     public UserResponse buscarUsuariosLoginDistintoId(Long id, String usuario) {
 
         List<User> users = userRepository.findByUsuarioAndIdNot(id, usuario);

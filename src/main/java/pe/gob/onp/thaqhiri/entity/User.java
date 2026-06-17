@@ -75,5 +75,8 @@ public class User {
     
     @Column(name = "TI_TRAB", nullable = false)
     private Integer tipoTrabajo;
-    
+
+    @Column(name = "PASSWORD_HASH", length = 255)
+    private String passwordHash;
+
 }
