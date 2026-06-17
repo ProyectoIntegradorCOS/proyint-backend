@@ -353,7 +353,8 @@ public class UserService {
      * @return
      */
     public UserResponse getByUsuario(String usuario) {
-        
+        log.info(usuario);
+        log.info(""+UConstante.ACTIVO);
     	User user = userRepository.findByUsuarioAndEstado(usuario, UConstante.ACTIVO)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado para usuario=" + usuario));
         

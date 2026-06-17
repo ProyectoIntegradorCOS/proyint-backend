@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             LEFT JOIN u.equipo e
             WHERE u.estado = 1
               AND u.tipoTrabajo = 1
-              AND (:nombres IS NULL OR UPPER(u.nombre) LIKE CONCAT('%', UPPER(:nombres), '%'))
+              AND (:nombres IS NULL OR UPPER(u.nombre) LIKE CONCAT('%', UPPER(CAST(:nombres AS string)), '%'))
               AND (:equipoId IS NULL OR e.id = CAST(:equipoId AS integer))
             """)
     Page<User> buscarUsersCampoPaginado(
@@ -64,6 +64,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("usuario") String usuario
     );
 
-    @Query("SELECT u.passwordHash FROM User u WHERE UPPER(u.usuario) = UPPER(:usuario) AND u.estado = 1")
+    @Query("SELECT u.passwordHash FROM User u WHERE UPPER(u.usuario) = UPPER(CAST(:usuario AS string)) AND u.estado = 1")
     Optional<String> findPasswordHashByUsuario(@Param("usuario") String usuario);
 }

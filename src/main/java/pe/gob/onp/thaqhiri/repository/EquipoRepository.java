@@ -48,8 +48,8 @@ public interface EquipoRepository extends JpaRepository<Equipo, Long> {
             FROM Equipo e
             LEFT JOIN e.supervisor u
             WHERE e.estado = 1
-              AND (:nombreEquipo IS NULL OR UPPER(e.nombre) LIKE CONCAT('%', UPPER(:nombreEquipo), '%'))
-              AND (:nombreSupervisor IS NULL OR UPPER(u.nombre) LIKE CONCAT('%', UPPER(:nombreSupervisor), '%'))
+              AND (:nombreEquipo IS NULL OR UPPER(e.nombre) LIKE CONCAT('%', UPPER(CAST(:nombreEquipo AS string)), '%'))
+              AND (:nombreSupervisor IS NULL OR UPPER(u.nombre) LIKE CONCAT('%', UPPER(CAST(:nombreSupervisor AS string)), '%'))
             """)
     Page<Equipo> buscarEquiposPaginado(
             @Param("nombreEquipo") String nombreEquipo,
