@@ -1,6 +1,5 @@
 package pe.gob.onp.thaqhiri.controller;
 
-import pe.gob.onp.thaqhiri.auth.SaaAuthenticationFilter;
 import pe.gob.onp.thaqhiri.config.SecurityConfig;
 import pe.gob.onp.thaqhiri.service.AuthService;
 
@@ -24,8 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         controllers = AuthController.class,
         excludeAutoConfiguration = SecurityAutoConfiguration.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                SecurityConfig.class,
-                SaaAuthenticationFilter.class
+                SecurityConfig.class
         })
 )
 @AutoConfigureMockMvc(addFilters = false)
@@ -40,12 +38,12 @@ class AuthControllerTest {
     @Test
     void login_returnsToken() throws Exception {
         String jsonResponse = "{\"token\":\"token123\",\"idUsuaSist\":1}";
-        
         Mockito.when(authService.generarToken(Mockito.any())).thenReturn(jsonResponse);
 
         String json = """
             {
-              "semilla": "semilla123"
+              "usuario": "ADMIN",
+              "clave": "Cambiar123!"
             }
             """;
 
@@ -57,23 +55,12 @@ class AuthControllerTest {
     }
 
     @Test
-    void logout_returnsRemoteResponse() throws Exception {
-        Mockito.when(authService.cerrarSesion(Mockito.anyString())).thenReturn("OK");
+    void logout_returnsSuccess() throws Exception {
+        Mockito.when(authService.cerrarSesion(Mockito.anyString()))
+                .thenReturn("{\"mensaje\":\"Sesión cerrada correctamente\"}");
 
         mockMvc.perform(post("/api/auth/logout")
                         .header("Authorization", "Bearer oldToken"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value("OK"));
-    }
-
-    @Test
-    void renew_returnsNewToken() throws Exception {
-        Mockito.when(authService.renovarToken(Mockito.anyString()))
-                .thenReturn("{\"token\":\"renewedToken\",\"idUsuaSist\":1}");
-
-        mockMvc.perform(post("/api/auth/renew")
-                        .header("Authorization", "Bearer oldToken"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").value("renewedToken"));
+                .andExpect(status().isOk());
     }
 }

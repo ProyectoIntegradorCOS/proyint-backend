@@ -1,10 +1,8 @@
 package pe.gob.onp.thaqhiri.controller;
 
-import pe.gob.onp.thaqhiri.auth.SaaAuthenticationFilter;
 import pe.gob.onp.thaqhiri.auth.SaaPrincipal;
 import pe.gob.onp.thaqhiri.auth.SaaTokenDetails;
 import pe.gob.onp.thaqhiri.config.SecurityConfig;
-import pe.gob.onp.thaqhiri.dto.VisitItemCompleteRequest;
 import pe.gob.onp.thaqhiri.dto.VisitItemResponse;
 import pe.gob.onp.thaqhiri.dto.VisitPlanResponse;
 import pe.gob.onp.thaqhiri.model.VisitPlanStatus;
@@ -39,12 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(
         controllers = VisitPlanController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                SecurityConfig.class,
-                SaaAuthenticationFilter.class
+                SecurityConfig.class
         })
 )
 @AutoConfigureMockMvc(addFilters = false)
-// [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2025-12-24 16:07 UTC-5 (Lima)][desc: Agrega mock de import masivo para endpoints de plantilla/import de planes][obj: VisitPlanControllerTest]
 class VisitPlanControllerTest {
 
     @Autowired
@@ -74,11 +70,9 @@ class VisitPlanControllerTest {
                 "Equipo 1",
                 1L,
                 1L,
-                // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-07 15:32 UTC-5 (Lima)][desc: Ajusta test al nuevo VisitPlanResponse con inicio de plan][obj: VisitPlanControllerTest.getPlanForVerifier_returnsPlan]
                 null,
                 null,
                 null,
-                // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-14 11:27 UTC-5 (Lima)][desc: Ajusta test al nuevo VisitPlanResponse con fin de plan][obj: VisitPlanControllerTest.getPlanForVerifier_returnsPlan]
                 null,
                 null,
                 null,
@@ -96,26 +90,26 @@ class VisitPlanControllerTest {
     @Test
     void completeVisit_returnsUpdatedItem() throws Exception {
         authenticate("uid1");
-	        var item = new VisitItemResponse(
-	                10L,
-	                "Target",
-	                null,
-	                1,
-	                "NORMAL",
-	                null,
-	                VisitItemState.DONE,
-	                null,
-	                null,
-	                "Info",
-	                null,
-	                // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-06 00:00 UTC-5 (Lima)][desc: Ajusta test al nuevo VisitItemResponse con lat/lng del destino][obj: VisitPlanControllerTest.completeVisit_returnsUpdatedItem]
-	                null,   // destinoId
-	                null,   // destinoNombre
-	                null,   // latitude
-	                null    // longitude
-	        );
+        var item = new VisitItemResponse(
+                10L,
+                "Target",
+                null,
+                1,
+                "NORMAL",
+                null,
+                VisitItemState.DONE,
+                null,
+                null,
+                "Info",
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
-        Mockito.when(visitPlanService.completeVisit(Mockito.eq(10L), Mockito.any(), Mockito.any(), "prueba", "prueba"))
+        Mockito.when(visitPlanService.completeVisit(Mockito.eq(10L), Mockito.any(), Mockito.any(),
+                        Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(item);
 
         String json = """

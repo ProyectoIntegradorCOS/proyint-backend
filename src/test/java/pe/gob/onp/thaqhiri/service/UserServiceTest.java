@@ -1,15 +1,13 @@
 package pe.gob.onp.thaqhiri.service;
 
-import pe.gob.onp.thaqhiri.dto.UserRequest;
-import pe.gob.onp.thaqhiri.entity.User;
 import pe.gob.onp.thaqhiri.exception.ResourceNotFoundException;
 import pe.gob.onp.thaqhiri.repository.EquipoRepository;
 import pe.gob.onp.thaqhiri.repository.HorarioRepository;
 import pe.gob.onp.thaqhiri.repository.UserRepository;
-import pe.gob.onp.thaqhiri.service.UserService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -21,6 +19,7 @@ class UserServiceTest {
     private UserRepository repo;
     private EquipoRepository equipoRepository;
     private HorarioRepository horarioRepository;
+    private PasswordEncoder passwordEncoder;
     private UserService service;
 
     @BeforeEach
@@ -28,7 +27,8 @@ class UserServiceTest {
         repo = mock(UserRepository.class);
         equipoRepository = mock(EquipoRepository.class);
         horarioRepository = mock(HorarioRepository.class);
-        service = new UserService(repo, equipoRepository, horarioRepository);
+        passwordEncoder = mock(PasswordEncoder.class);
+        service = new UserService(repo, equipoRepository, horarioRepository, passwordEncoder);
     }
 
     @Test

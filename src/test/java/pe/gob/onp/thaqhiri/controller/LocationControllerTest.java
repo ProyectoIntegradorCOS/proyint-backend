@@ -1,16 +1,13 @@
 package pe.gob.onp.thaqhiri.controller;
 
-import pe.gob.onp.thaqhiri.auth.SaaAuthenticationFilter;
 import pe.gob.onp.thaqhiri.auth.SaaPrincipal;
 import pe.gob.onp.thaqhiri.auth.SaaTokenDetails;
 import pe.gob.onp.thaqhiri.config.SecurityConfig;
-import pe.gob.onp.thaqhiri.controller.LocationController;
 import pe.gob.onp.thaqhiri.dto.DailyDistanceResponse;
 import pe.gob.onp.thaqhiri.dto.LocationHistoryResponse;
 import pe.gob.onp.thaqhiri.dto.LocationResponse;
 import pe.gob.onp.thaqhiri.service.LocationService;
 import pe.gob.onp.thaqhiri.service.UbicacionesService;
-import pe.gob.onp.thaqhiri.service.UserService;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -41,8 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         controllers = LocationController.class,
         excludeAutoConfiguration = SecurityAutoConfiguration.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                SecurityConfig.class,
-                SaaAuthenticationFilter.class
+                SecurityConfig.class
         })
 )
 @AutoConfigureMockMvc(addFilters = false)
@@ -55,8 +51,6 @@ class LocationControllerTest {
     private LocationService locationService;
     @MockBean
     private UbicacionesService ubicacionesService;
-    @MockBean
-    private UserService userService;
 
     @AfterEach
     void cleanup() {
@@ -106,11 +100,8 @@ class LocationControllerTest {
     @Test
     void createBatch_returnsCount() throws Exception {
         authenticate("abc");
-        
-        String usuario = "prueba";
-        String terminal = "prueba";
-        
-        Mockito.when(locationService.createBatch(Mockito.any(), usuario, terminal)).thenReturn(5);
+        Mockito.when(locationService.createBatch(Mockito.any(), Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(5);
 
         String json = """
             {
@@ -131,7 +122,8 @@ class LocationControllerTest {
             }
             """;
 
-        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/locations/batch")
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                        .post("/api/locations/batch")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())

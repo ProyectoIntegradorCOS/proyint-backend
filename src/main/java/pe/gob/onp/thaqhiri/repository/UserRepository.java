@@ -74,5 +74,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     	        @Param("usuario") String usuario
     	);
 
-    
+    @Query("SELECT u.passwordHash FROM User u WHERE UPPER(u.usuario) = UPPER(:usuario) AND u.estado = '1'")
+    Optional<String> findPasswordHashByUsuario(@Param("usuario") String usuario);
+
 }

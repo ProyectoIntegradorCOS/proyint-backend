@@ -1,6 +1,5 @@
 package pe.gob.onp.thaqhiri.controller;
 
-import pe.gob.onp.thaqhiri.auth.SaaAuthenticationFilter;
 import pe.gob.onp.thaqhiri.config.SecurityConfig;
 import pe.gob.onp.thaqhiri.dto.EquipoDTO;
 import pe.gob.onp.thaqhiri.service.EquipoService;
@@ -28,8 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         controllers = EquipoController.class,
         excludeAutoConfiguration = SecurityAutoConfiguration.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                SecurityConfig.class,
-                SaaAuthenticationFilter.class
+                SecurityConfig.class
         })
 )
 @AutoConfigureMockMvc(addFilters = false)
