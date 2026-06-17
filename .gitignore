@@ -8,3 +8,5 @@ application-local.yml
 .vscode/
 .idea/
 *.iml
+.DS_Store
+**/.DS_Store

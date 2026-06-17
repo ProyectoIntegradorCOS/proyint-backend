@@ -9,8 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import pe.gob.onp.thaqhiri.auth.SaaAuthenticationFilter;
-import pe.gob.onp.thaqhiri.auth.SaaPrincipal;
 import pe.gob.onp.thaqhiri.dto.DailyDistanceResponse;
 import pe.gob.onp.thaqhiri.dto.LocationBatchRequest;
 import pe.gob.onp.thaqhiri.dto.LocationCreateRequest;
@@ -18,20 +16,16 @@ import pe.gob.onp.thaqhiri.dto.LocationHistoryResponse;
 import pe.gob.onp.thaqhiri.dto.LocationResponse;
 import pe.gob.onp.thaqhiri.service.LocationService;
 import pe.gob.onp.thaqhiri.service.UbicacionesService;
-import pe.gob.onp.thaqhiri.service.UserService;
 import pe.gob.onp.thaqhiri.util.USesion;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.Timer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,13 +33,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/locations")
@@ -53,21 +43,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class LocationController {
 
-	private static final Logger log = LoggerFactory.getLogger(LocationController.class);
     private final LocationService locationService;
     private final UbicacionesService ubicacionService;
-    private final UserService userService;
     private final MeterRegistry meterRegistry;
 
     public LocationController(
             LocationService locationService,
             UbicacionesService ubicacionService,
-            UserService userService,
             MeterRegistry meterRegistry
     ) {
         this.locationService = locationService;
         this.ubicacionService = ubicacionService;
-        this.userService = userService;
         this.meterRegistry = meterRegistry;
     }
 
