@@ -25,8 +25,8 @@ public interface DestinoRepository extends JpaRepository<Destino, Long> {
             SELECT d
             FROM Destino d
             WHERE d.estadoRegistro = 1
-              AND ( :destino IS NULL OR UPPER(d.nombre) LIKE CONCAT('%', UPPER(:destino), '%') )
-              AND ( :direccion IS NULL OR UPPER(d.direccion) LIKE CONCAT('%', UPPER(:direccion), '%') )
+              AND ( :destino IS NULL OR UPPER(d.nombre) LIKE CONCAT('%', UPPER(CAST(:destino AS string)), '%') )
+              AND ( :direccion IS NULL OR UPPER(d.direccion) LIKE CONCAT('%', UPPER(CAST(:direccion AS string)), '%') )
         """)
     Page<Destino> buscarPaginado(
             @Param("destino") String destino,
