@@ -46,7 +46,7 @@ public class HorarioService {
                     existing.setNombre(dto.getNombre());
                     existing.setHoraInicio(dto.getHoraInicio());
                     existing.setHoraFin(dto.getHoraFin());
-                    existing.setEstado(dto.getEstado() != null ? String.valueOf(dto.getEstado()) : UConstante.ACTIVO_REGI);
+                    existing.setEstado(dto.getEstado() != null ? dto.getEstado() : UConstante.ACTIVO_REGI);
                     existing.setIdUsuaModi(usuario);
                     existing.setDeTermModi(terminal);
                     
@@ -64,7 +64,7 @@ public class HorarioService {
         dto.setNombre(entity.getNombre());
         dto.setHoraInicio(entity.getHoraInicio());
         dto.setHoraFin(entity.getHoraFin());
-        dto.setEstado(entity.getEstado() != null ? Integer.valueOf(entity.getEstado()) : null);
+        dto.setEstado(entity.getEstado());
         
         return dto;
     }
@@ -76,7 +76,7 @@ public class HorarioService {
         entity.setNombre(dto.getNombre());
         entity.setHoraInicio(dto.getHoraInicio());
         entity.setHoraFin(dto.getHoraFin());
-        entity.setEstado(dto.getEstado() != null ? String.valueOf(dto.getEstado()) : UConstante.ACTIVO_REGI);
+        entity.setEstado(dto.getEstado() != null ? dto.getEstado() : UConstante.ACTIVO_REGI);
         
         return entity;
     }

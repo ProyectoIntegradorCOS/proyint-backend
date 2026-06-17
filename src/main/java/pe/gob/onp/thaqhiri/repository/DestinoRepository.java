@@ -15,17 +15,16 @@ import pe.gob.onp.thaqhiri.entity.Destino;
 
 public interface DestinoRepository extends JpaRepository<Destino, Long> {
 
-    // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2025-12-24 10:12 UTC-5 (Lima)][desc: Lista destinos activos para plantilla/import de plan de visitas][obj: DestinoRepository]
-    List<Destino> findByEstadoRegistroOrderByNombreAsc(String estado);
-    
-    List<Destino> findByEstadoRegistro(String estado);
+    List<Destino> findByEstadoRegistroOrderByNombreAsc(Integer estado);
+
+    List<Destino> findByEstadoRegistro(Integer estado);
 
     Optional<Destino> findFirstByNombreIgnoreCase(String nombre);
 
     @Query("""
             SELECT d
             FROM Destino d
-            WHERE d.estadoRegistro = '1'
+            WHERE d.estadoRegistro = 1
               AND ( :destino IS NULL OR UPPER(d.nombre) LIKE CONCAT('%', UPPER(:destino), '%') )
               AND ( :direccion IS NULL OR UPPER(d.direccion) LIKE CONCAT('%', UPPER(:direccion), '%') )
         """)
@@ -39,7 +38,7 @@ public interface DestinoRepository extends JpaRepository<Destino, Long> {
     @Transactional
     @Query("""
             UPDATE Destino d
-               SET d.estadoRegistro = '0',
+               SET d.estadoRegistro = 0,
                    d.usuarioModificacion = :usuario,
                    d.terminalModificacion = :terminal
              WHERE d.id = :id
@@ -49,15 +48,10 @@ public interface DestinoRepository extends JpaRepository<Destino, Long> {
             @Param("usuario") String usuario,
             @Param("terminal") String terminal
     );
-    
-    
-    /**
-     * Busca un destino por nombre y direccion coincidencia exacta sin tomar en cuenta mayusculas y minusculas 
-     */
+
     Optional<Destino> findFirstByNombreIgnoreCaseAndDireccionIgnoreCaseAndEstadoRegistro(
             String nombre,
             String direccion,
-            String estado
+            Integer estado
     );
-    
 }

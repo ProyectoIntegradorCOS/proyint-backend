@@ -179,7 +179,7 @@ public class PreguntaService {
     	PreguntaDTO dto = new PreguntaDTO();
     	
     	dto.setDescripcion(entidad.getDescripcion());
-    	dto.setEstado(entidad.getEstado() != null ? Integer.valueOf(entidad.getEstado()) : null);
+    	dto.setEstado(entidad.getEstado());
     	dto.setGrupo(entidad.getGrupo());
     	dto.setId(entidad.getId());
     	dto.setIdCuestionario(entidad.getIdCuestionario());

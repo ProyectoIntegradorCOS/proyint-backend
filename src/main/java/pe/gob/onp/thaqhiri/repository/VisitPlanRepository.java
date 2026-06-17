@@ -16,33 +16,30 @@ import java.util.Optional;
 
 public interface VisitPlanRepository extends JpaRepository<VisitPlan, Long> {
 
-    Optional<VisitPlan> findByIdAndStRegi(Long id, String stRegi);
+    Optional<VisitPlan> findByIdAndStRegi(Long id, Integer stRegi);
 
     Optional<VisitPlan> findFirstByVerifierIdAndStatusNotOrderByCreatedAtDesc(Long verifierId, VisitPlanStatus excludedStatus);
-    
-    // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2025-12-12 12:25 UTC-5 (Lima)][desc: Obtiene plan del día para verificador excluyendo completados][obj: VisitPlanRepository]
+
     Optional<VisitPlan> findFirstByVerifierIdAndStatusNotAndPlannedForOrderByCreatedAtDesc(
             Long verifierId,
             VisitPlanStatus excludedStatus,
             LocalDate plannedFor);
 
-    // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-08 13:56 UTC-5 (Lima)][desc: Obtiene el plan del día del verificador incluyendo completados][obj: VisitPlanRepository]
     Optional<VisitPlan> findFirstByVerifierIdAndPlannedForOrderByCreatedAtDesc(
             Long verifierId,
             LocalDate plannedFor);
 
-    // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-03-06 00:00 UTC-5 (Lima)][desc: Obtiene plan del día del verificador solo activos (st_regi=1)][obj: VisitPlanRepository]
     Optional<VisitPlan> findFirstByVerifierIdAndPlannedForAndStRegiOrderByCreatedAtDesc(
             Long verifierId,
             LocalDate plannedFor,
-            String stRegi);
-        
+            Integer stRegi);
+
     @Query("""
             SELECT p
             FROM VisitPlan p
             JOIN p.verifier v
             LEFT JOIN v.equipo e
-            WHERE p.stRegi = '1'              
+            WHERE p.stRegi = 1
               AND (:fechaPlan IS NULL OR p.plannedFor = :fechaPlan)
               AND (:idPersonas IS NULL OR v.id IN :idPersonas)
             """)
@@ -52,22 +49,22 @@ public interface VisitPlanRepository extends JpaRepository<VisitPlan, Long> {
             Pageable pageable
     );
 
-    
-    boolean existsByVerifierIdAndPlannedForAndStRegi(Long verifierId, LocalDate plannedFor, String stRegi);
-    
+
+    boolean existsByVerifierIdAndPlannedForAndStRegi(Long verifierId, LocalDate plannedFor, Integer stRegi);
+
     boolean existsByVerifierIdAndPlannedForAndIdNotAndStRegi(
             Long verifierId,
             LocalDate plannedFor,
             Long idPlanExcluido,
-            String stRegi
+            Integer stRegi
     );
-    
-    
+
+
     @Modifying
     @Transactional
     @Query("""
             UPDATE VisitPlan p
-               SET p.stRegi = '0',
+               SET p.stRegi = 0,
                    p.updatedBy = :usuario,
                    p.updatedFrom = :terminal
              WHERE p.id = :id
@@ -78,11 +75,10 @@ public interface VisitPlanRepository extends JpaRepository<VisitPlan, Long> {
             @Param("terminal") String terminal
     );
 
-    // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-22 08:13 UTC-5 (Lima)][desc: Lista colaboradores con plan por fecha][obj: VisitPlanRepository.findVerifiersWithPlan]
     @Query("""
             SELECT DISTINCT p.verifier
             FROM VisitPlan p
-            WHERE p.stRegi = '1'
+            WHERE p.stRegi = 1
               AND p.status != :status
               AND p.plannedFor = :fechaPlan
               AND (:verifierIds IS NULL OR p.verifier.id IN :verifierIds)
@@ -90,8 +86,6 @@ public interface VisitPlanRepository extends JpaRepository<VisitPlan, Long> {
     java.util.List<User> findVerifiersWithPlanNotCompleted(
             @Param("fechaPlan") java.time.LocalDate fechaPlan,
             @Param("verifierIds") java.util.Collection<Long> verifierIds,
-            @Param("status") VisitPlanStatus status            
+            @Param("status") VisitPlanStatus status
     );
-    
-    
 }

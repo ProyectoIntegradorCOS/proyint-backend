@@ -60,7 +60,7 @@ public class CuestionarioService {
         	c.setDescripcion(dto.getDescripcion().trim().toUpperCase());
         }
         
-        c.setEstado(dto.getEstado() != null ? String.valueOf(dto.getEstado()) : UConstante.ACTIVO_REGI);
+        c.setEstado(dto.getEstado() != null ? dto.getEstado() : UConstante.ACTIVO_REGI);
         c.setUsuarioCrea(usuario);
         c.setTerminalCrea(terminal);
 
@@ -80,7 +80,7 @@ public class CuestionarioService {
             	c.setDescripcion(dto.getDescripcion().trim().toUpperCase());
             }
             
-            c.setEstado(dto.getEstado() != null ? String.valueOf(dto.getEstado()) : UConstante.ACTIVO_REGI);
+            c.setEstado(dto.getEstado() != null ? dto.getEstado() : UConstante.ACTIVO_REGI);
             c.setUsuarioModi(usuario);
             c.setTerminalModi(terminal);
 
@@ -119,7 +119,7 @@ public class CuestionarioService {
     	CuestionarioDTO dto = new CuestionarioDTO();
     	
     	dto.setDescripcion(entidad.getDescripcion());
-    	dto.setEstado(entidad.getEstado() != null ? Integer.valueOf(entidad.getEstado()) : null);
+    	dto.setEstado(entidad.getEstado());
     	dto.setId(entidad.getId());
     	dto.setNombre(entidad.getNombre());    	
         
@@ -137,7 +137,7 @@ public class CuestionarioService {
     
     public List<CuestionarioDTO> listarCuestionarios() {
         // Usamos la consulta generada por Spring Data JPA, buscando por estado = 1
-        List<Cuestionario> activos = repository.findByEstadoOrderByNombre("" + UConstante.ACTIVO);
+        List<Cuestionario> activos = repository.findByEstadoOrderByNombre(UConstante.ACTIVO);
 
         // Mapea la entidad Colaborador a ColaboradorSimpleDTO
         return activos.stream()

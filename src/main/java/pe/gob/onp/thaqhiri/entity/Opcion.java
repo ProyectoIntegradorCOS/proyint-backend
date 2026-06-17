@@ -1,8 +1,13 @@
 package pe.gob.onp.thaqhiri.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "OPCION")
 public class Opcion {
@@ -24,7 +29,7 @@ public class Opcion {
 
     // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-16 10:51 UTC-5 (Lima)][desc: Soporta MaterialLocalizations para es_PE/es_ES (historial por fecha)][obj: Opcion.estado]
     @Column(name = "ST_REGI", nullable = false)
-    private String estado;
+    private Integer estado;
     
     @Column(name = "NU_ORDE", nullable = false)
     private Integer orden;
@@ -53,116 +58,9 @@ public class Opcion {
     @Column(name = "ID_SIGU_PREG")
     private Long idSiguientePregunta;
     
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getIdPregunta() {
-		return idPregunta;
-	}
-
-	public void setIdPregunta(Long idPregunta) {
-		this.idPregunta = idPregunta;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getValor() {
-		return valor;
-	}
-
-	public void setValor(String valor) {
-		this.valor = valor;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getUsuarioCrea() {
-		return usuarioCrea;
-	}
-
-	public void setUsuarioCrea(String usuarioCrea) {
-		this.usuarioCrea = usuarioCrea;
-	}
-
-	public Date getFechaCrea() {
-		return fechaCrea;
-	}
-
-	public void setFechaCrea(Date fechaCrea) {
-		this.fechaCrea = fechaCrea;
-	}
-
-	public String getTerminalCrea() {
-		return terminalCrea;
-	}
-
-	public void setTerminalCrea(String terminalCrea) {
-		this.terminalCrea = terminalCrea;
-	}
-
-	public String getUsuarioModi() {
-		return usuarioModi;
-	}
-
-	public void setUsuarioModi(String usuarioModi) {
-		this.usuarioModi = usuarioModi;
-	}
-
-	public Date getFechaModi() {
-		return fechaModi;
-	}
-
-	public void setFechaModi(Date fechaModi) {
-		this.fechaModi = fechaModi;
-	}
-
-	public String getTerminalModi() {
-		return terminalModi;
-	}
-
-	public void setTerminalModi(String terminalModi) {
-		this.terminalModi = terminalModi;
-	}
-
 	public Opcion() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public Long getIdSiguientePregunta() {
-		return idSiguientePregunta;
-	}
-
-	public void setIdSiguientePregunta(Long idSiguientePregunta) {
-		this.idSiguientePregunta = idSiguientePregunta;
-	}
-
-	public Integer getOrden() {
-		return orden;
-	}
-
-	public void setOrden(Integer orden) {
-		this.orden = orden;
-	}
-
-    
     
 }

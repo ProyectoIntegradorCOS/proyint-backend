@@ -2,9 +2,9 @@ spring:
   application:
     name: location-backend
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/thaqhiri}
-    username: ${SPRING_DATASOURCE_USERNAME:thaqhiri}
-    password: ${SPRING_DATASOURCE_PASSWORD:thaqhiri}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://thaqhiri-dev-db.c5yeysa8c27n.us-west-2.rds.amazonaws.com:5432/thaqhiri}
+    username: ${SPRING_DATASOURCE_USERNAME:admindmcfinal}
+    password: ${SPRING_DATASOURCE_PASSWORD:AdminDMC123}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -61,7 +61,7 @@ jwt:
   expiration: ${JWT_EXPIRATION:PT8H}
 
 mapbox:
-  access-token: ${MAPBOX_ACCESS_TOKEN}
+  access-token: ${MAPBOX_ACCESS_TOKEN:}
   geocode-api: ${MAPBOX_GEOCODE_API:v6}
 
 management:

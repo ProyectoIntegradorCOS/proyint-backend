@@ -1271,8 +1271,8 @@ public class VisitPlanService {
             equipoId = user.getEquipo().getId();
             equipoNombre = user.getEquipo().getNombre();
         }
-        Integer estadoNumerico = user.getEstado() != null ? Integer.valueOf(user.getEstado()) : null;
-        String estadoDescripcion = UConstante.ACTIVO_REGI.equals(user.getEstado())
+        Integer estadoNumerico = user.getEstado();
+        String estadoDescripcion = UConstante.ACTIVO.equals(user.getEstado())
                 ? UConstante.ACTIVO_DESCRIPCION
                 : UConstante.INACTIVO_DESCRIPCION;
         Long horarioId = null;

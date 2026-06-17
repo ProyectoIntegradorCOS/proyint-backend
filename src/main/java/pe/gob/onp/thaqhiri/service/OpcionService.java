@@ -1,14 +1,11 @@
 package pe.gob.onp.thaqhiri.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import pe.gob.onp.thaqhiri.dto.OpcionDTO;
-import pe.gob.onp.thaqhiri.dto.PreguntaDTO;
 import pe.gob.onp.thaqhiri.entity.Opcion;
-import pe.gob.onp.thaqhiri.entity.Pregunta;
 import pe.gob.onp.thaqhiri.repository.OpcionRepository;
 import pe.gob.onp.thaqhiri.util.UConstante;
 
@@ -41,7 +38,7 @@ public class OpcionService {
         o.setIdPregunta(dto.getIdPregunta());
         o.setDescripcion(dto.getDescripcion());
         o.setValor(dto.getValor());
-        o.setEstado(dto.getEstado() != null ? String.valueOf(dto.getEstado()) : UConstante.ACTIVO_REGI);
+        o.setEstado(dto.getEstado() != null ? dto.getEstado() : UConstante.ACTIVO_REGI);
         o.setOrden(dto.getOrden());
         o.setIdSiguientePregunta(dto.getIdSiguientePregunta());
         o.setUsuarioCrea(usuario);
@@ -57,7 +54,7 @@ public class OpcionService {
             Opcion o = optional.get();
             o.setDescripcion(dto.getDescripcion());
             o.setValor(dto.getValor());
-            o.setEstado(dto.getEstado() != null ? String.valueOf(dto.getEstado()) : UConstante.ACTIVO_REGI);
+            o.setEstado(dto.getEstado() != null ? dto.getEstado() : UConstante.ACTIVO_REGI);
             o.setOrden(dto.getOrden());
             o.setIdSiguientePregunta(dto.getIdSiguientePregunta());
             o.setUsuarioModi(usuario);
@@ -77,7 +74,7 @@ public class OpcionService {
 			OpcionDTO dto = new OpcionDTO();
 	    	
 	    	dto.setDescripcion(entidad.getDescripcion());
-	    	dto.setEstado(entidad.getEstado() != null ? Integer.valueOf(entidad.getEstado()) : null);
+	    	dto.setEstado(entidad.getEstado());
 	    	dto.setId(entidad.getId());
 	    	dto.setIdPregunta(entidad.getIdPregunta());
 	    	dto.setValor(entidad.getValor());

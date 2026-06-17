@@ -87,6 +87,6 @@ public class VisitPlan {
     private OffsetDateTime updatedAt;
     
     @Column(name = "ST_REGI")
-    private String stRegi;
+    private Integer stRegi;
 
 }

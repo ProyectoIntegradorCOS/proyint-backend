@@ -3,7 +3,11 @@ package pe.gob.onp.thaqhiri.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "import_job")
 public class ImportJob {
@@ -67,143 +71,5 @@ public class ImportJob {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public int getTotalFilas() {
-		return totalFilas;
-	}
-
-	public void setTotalFilas(int totalFilas) {
-		this.totalFilas = totalFilas;
-	}
-
-	public int getFilasProcesadas() {
-		return filasProcesadas;
-	}
-
-	public void setFilasProcesadas(int filasProcesadas) {
-		this.filasProcesadas = filasProcesadas;
-	}
-
-	public int getPorcentaje() {
-		return porcentaje;
-	}
-
-	public void setPorcentaje(int porcentaje) {
-		this.porcentaje = porcentaje;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getMensaje() {
-		return mensaje;
-	}
-
-	public void setMensaje(String mensaje) {
-		this.mensaje = mensaje;
-	}
-
-	public LocalDateTime getFechaInicio() {
-		return fechaInicio;
-	}
-
-	public void setFechaInicio(LocalDateTime fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
-
-	public LocalDateTime getFechaFin() {
-		return fechaFin;
-	}
-
-	public void setFechaFin(LocalDateTime fechaFin) {
-		this.fechaFin = fechaFin;
-	}
-
-	public long getNuHorasRestantes() {
-		return nuHorasRestantes;
-	}
-
-	public void setNuHorasRestantes(long nuHorasRestantes) {
-		this.nuHorasRestantes = nuHorasRestantes;
-	}
-
-	public long getNuMinutosRestantes() {
-		return nuMinutosRestantes;
-	}
-
-	public void setNuMinutosRestantes(long nuMinutosRestantes) {
-		this.nuMinutosRestantes = nuMinutosRestantes;
-	}
-
-	public long getNuSegundosRestantes() {
-		return nuSegundosRestantes;
-	}
-
-	public void setNuSegundosRestantes(long nuSegundosRestantes) {
-		this.nuSegundosRestantes = nuSegundosRestantes;
-	}
-
-	public String getUsuarioCreacion() {
-		return usuarioCreacion;
-	}
-
-	public void setUsuarioCreacion(String usuarioCreacion) {
-		this.usuarioCreacion = usuarioCreacion;
-	}
-
-	public OffsetDateTime getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(OffsetDateTime fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public String getTerminalCreacion() {
-		return terminalCreacion;
-	}
-
-	public void setTerminalCreacion(String terminalCreacion) {
-		this.terminalCreacion = terminalCreacion;
-	}
-
-	public String getUsuarioModificacion() {
-		return usuarioModificacion;
-	}
-
-	public void setUsuarioModificacion(String usuarioModificacion) {
-		this.usuarioModificacion = usuarioModificacion;
-	}
-
-	public OffsetDateTime getFechaModificacion() {
-		return fechaModificacion;
-	}
-
-	public void setFechaModificacion(OffsetDateTime fechaModificacion) {
-		this.fechaModificacion = fechaModificacion;
-	}
-
-	public String getTerminalModificacion() {
-		return terminalModificacion;
-	}
-
-	public void setTerminalModificacion(String terminalModificacion) {
-		this.terminalModificacion = terminalModificacion;
-	}
-
-    
-    
+	    
 }

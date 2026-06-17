@@ -43,7 +43,7 @@ public class User {
 
     // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-16 10:51 UTC-5 (Lima)][desc: Soporta MaterialLocalizations para es_PE/es_ES (historial por fecha)][obj: User.estado]
     @Column(name = "ST_REGI", nullable = false)
-    private String estado;
+    private Integer estado;
 
     @Column(name = "ID_USUA_CREA", nullable = false, length = 30)
     private String usuarioCreacion;

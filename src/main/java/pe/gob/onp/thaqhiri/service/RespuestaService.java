@@ -99,7 +99,7 @@ public class RespuestaService {
     	
     	RespuestaPreguntaDTO dto = new RespuestaPreguntaDTO();
     	
-    	dto.setEstado(entidad.getEstado() != null ? Integer.valueOf(entidad.getEstado()) : null);
+    	dto.setEstado(entidad.getEstado());
     	dto.setId(entidad.getId());
     	dto.setIdPersona(entidad.getIdPersona());
     	dto.setIdCuestionario(entidad.getIdCuestionario());

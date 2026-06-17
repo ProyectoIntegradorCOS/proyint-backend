@@ -94,7 +94,7 @@ public class UserService {
         user.setSaaSub(request.saaSubject());
         user.setUsuario(request.usuario());
         user.setNombre(request.nombre());
-        user.setEstado(request.estado() != null ? String.valueOf(request.estado()) : UConstante.ACTIVO_REGI);
+        user.setEstado(request.estado() != null ? request.estado() : UConstante.ACTIVO);
         
         if (user.getId() == null) {
             user.setUsuarioCreacion(usuario);
@@ -145,7 +145,7 @@ public class UserService {
     
     @Transactional(readOnly = true)
     public User getEntityByUsuario(String usuario) {
-        return userRepository.findByUsuarioAndEstado(usuario, UConstante.ACTIVO_REGI)
+        return userRepository.findByUsuarioAndEstado(usuario, UConstante.ACTIVO)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado para usuario=" + usuario));
     }
 
@@ -179,14 +179,14 @@ public class UserService {
     		horarioNombre = user.getHorario().getNombre();
     	}
     	
-    	if(UConstante.ACTIVO_REGI.equals(user.getEstado())) {
-    		estadoDescripcion = UConstante.ACTIVO_DESCRIPCION; 
+    	if(UConstante.ACTIVO.equals(user.getEstado())) {
+    		estadoDescripcion = UConstante.ACTIVO_DESCRIPCION;
     	}
     	else {
-    		estadoDescripcion = UConstante.INACTIVO_DESCRIPCION; 
+    		estadoDescripcion = UConstante.INACTIVO_DESCRIPCION;
     	}
-    	
-        Integer estadoNumerico = user.getEstado() != null ? Integer.valueOf(user.getEstado()) : null;
+
+        Integer estadoNumerico = user.getEstado();
         UserResponse respuesta = new UserResponse(
                 user.getId(),
                 user.getSaaSub(),
@@ -281,7 +281,7 @@ public class UserService {
      */
     public List<UserResponse> listarPersonasActivasCampo() {
         // Usamos la consulta generada por Spring Data JPA, buscando por estado = 1
-        List<User> activos = userRepository.findByEstadoAndTipoTrabajoOrderByNombreAsc(UConstante.ACTIVO_REGI, UConstante.TIPO_TRABAJO_CAMPO);
+        List<User> activos = userRepository.findByEstadoAndTipoTrabajoOrderByNombreAsc(UConstante.ACTIVO, UConstante.TIPO_TRABAJO_CAMPO);
 
         // Mapea la entidad Colaborador a ColaboradorSimpleDTO
         return activos.stream()
@@ -296,7 +296,7 @@ public class UserService {
      */
     public List<UserResponse> listarPersonasActivasTotal() {
         // Usamos la consulta generada por Spring Data JPA, buscando por estado = 1
-        List<User> activos = userRepository.findByEstadoOrderByNombreAsc(UConstante.ACTIVO_REGI);
+        List<User> activos = userRepository.findByEstadoOrderByNombreAsc(UConstante.ACTIVO);
 
         // Mapea la entidad Colaborador a ColaboradorSimpleDTO
         return activos.stream()
@@ -314,7 +314,7 @@ public class UserService {
     public List<UserResponse> getUsuariosEquipo(String stridEquipo) {
         Long idEquipo = Long.parseLong(stridEquipo);
 
-        List<User> usuarios = userRepository.findByEquipoIdAndEstadoAndTipoTrabajoOrderByNombreAsc(idEquipo, UConstante.ACTIVO_REGI, UConstante.TIPO_TRABAJO_CAMPO);
+        List<User> usuarios = userRepository.findByEquipoIdAndEstadoAndTipoTrabajoOrderByNombreAsc(idEquipo, UConstante.ACTIVO, UConstante.TIPO_TRABAJO_CAMPO);
 
         // 🧭 Mapear la entidad Colaborador a un DTO simple
         return usuarios.stream()
@@ -354,7 +354,7 @@ public class UserService {
      */
     public UserResponse getByUsuario(String usuario) {
         
-    	User user = userRepository.findByUsuarioAndEstado(usuario, UConstante.ACTIVO_REGI)
+    	User user = userRepository.findByUsuarioAndEstado(usuario, UConstante.ACTIVO)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado para usuario=" + usuario));
         
     	log.debug("Usuario encontrado saaSub={}", usuario);

@@ -13,17 +13,15 @@ import pe.gob.onp.thaqhiri.entity.Pregunta;
 
 @Repository
 public interface PreguntaRepository extends JpaRepository<Pregunta, Long> {
-	
-	
-	// Buscar todas las preguntas de un cuestionario específico
-    List<Pregunta> findByIdCuestionarioAndEstadoOrderByOrden(Long idCuestionario, String estado);
-    
-    
+
+    List<Pregunta> findByIdCuestionarioAndEstadoOrderByOrden(Long idCuestionario, Integer estado);
+
+
     @Modifying
     @Transactional
     @Query("""
             UPDATE Pregunta p
-               SET p.estado = '0',
+               SET p.estado = 0,
                    p.usuarioModi = :usuario,
                    p.terminalModi = :terminal
              WHERE p.id = :id
@@ -38,26 +36,24 @@ public interface PreguntaRepository extends JpaRepository<Pregunta, Long> {
     @Transactional
     @Query("""
             UPDATE Pregunta p
-               SET p.estado = '0',
+               SET p.estado = 0,
                    p.usuarioModi = :usuario,
                    p.terminalModi = :terminal
              WHERE p.idCuestionario = :idCuestionario
-               AND p.estado = '1'
+               AND p.estado = 1
            """)
     int desactivarPorCuestionario(
             @Param("idCuestionario") Long idCuestionario,
             @Param("usuario") String usuario,
             @Param("terminal") String terminal
     );
-    
-    
+
+
     @Query("""
             SELECT COALESCE(MAX(p.orden), 0)
             FROM Pregunta p
-            WHERE p.estado = '1' AND
+            WHERE p.estado = 1 AND
                   p.idCuestionario = :idCuestionario
             """)
-     Integer findMaxOrdenByCuestionario(@Param("idCuestionario") Long idCuestionario);
-    
-    
+    Integer findMaxOrdenByCuestionario(@Param("idCuestionario") Long idCuestionario);
 }
