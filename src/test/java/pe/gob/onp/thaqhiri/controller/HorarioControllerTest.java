@@ -1,6 +1,5 @@
 package pe.gob.onp.thaqhiri.controller;
 
-import pe.gob.onp.thaqhiri.auth.SaaAuthenticationFilter;
 import pe.gob.onp.thaqhiri.config.SecurityConfig;
 import pe.gob.onp.thaqhiri.dto.HorarioDTO;
 import pe.gob.onp.thaqhiri.service.HorarioService;
@@ -29,8 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         controllers = HorarioController.class,
         excludeAutoConfiguration = SecurityAutoConfiguration.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                SecurityConfig.class,
-                SaaAuthenticationFilter.class
+                SecurityConfig.class
         })
 )
 @AutoConfigureMockMvc(addFilters = false)
@@ -52,7 +50,7 @@ class HorarioControllerTest {
         var horario = new HorarioDTO();
         horario.setId(1L);
         horario.setNombre("Turno Mañana");
-        
+
         Mockito.when(horarioService.getAll()).thenReturn(List.of(horario));
 
         mockMvc.perform(get("/api/horarios"))
@@ -65,7 +63,7 @@ class HorarioControllerTest {
         var horario = new HorarioDTO();
         horario.setId(1L);
         horario.setNombre("Turno Mañana");
-        
+
         Mockito.when(horarioService.getById(1L)).thenReturn(Optional.of(horario));
 
         mockMvc.perform(get("/api/horarios/1"))
