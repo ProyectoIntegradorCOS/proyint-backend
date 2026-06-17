@@ -42,7 +42,7 @@ public interface ReporteRepository extends JpaRepository<VisitPlan, Long> {
     	    JOIN vp.verifier v
     	    LEFT JOIN v.equipo e
     	    JOIN VisitItem vi ON vi.plan.id = vp.id
-    	    WHERE vp.stRegi = '1'
+    	    WHERE vp.stRegi = 1
     	      AND vi.state <> :estadoExcluido
     	      AND (:idPersonas IS NULL OR v.id IN :idPersonas)
     	      AND (:fechaInicio IS NULL OR vp.plannedFor >= :fechaInicio)

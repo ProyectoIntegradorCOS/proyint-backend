@@ -11,8 +11,8 @@ public class UConstante {
 	public static Integer ACTIVO = 1;
 	public static Integer INACTIVO = 0;
 	// [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-16 11:47 UTC-5 (Lima)][desc: Soporta MaterialLocalizations para es_PE/es_ES (historial por fecha)][obj: UConstante ST_REGI]
-	public static String ACTIVO_REGI = "1";
-	public static String INACTIVO_REGI = "0";
+	public static Integer ACTIVO_REGI = 1;
+	public static Integer INACTIVO_REGI = 0;
 	
 	public static String ACTIVO_DESCRIPCION = "Activo";
 	public static String INACTIVO_DESCRIPCION = "Inactivo";

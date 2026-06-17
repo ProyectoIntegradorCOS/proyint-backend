@@ -2,7 +2,11 @@ package pe.gob.onp.thaqhiri.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "RESPUESTA")
 public class Respuesta {
@@ -38,7 +42,7 @@ public class Respuesta {
 
     // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-16 10:51 UTC-5 (Lima)][desc: Soporta MaterialLocalizations para es_PE/es_ES (historial por fecha)][obj: Respuesta.estado]
     @Column(name = "ST_REGI", nullable = false)
-    private String estado;
+    private Integer estado;
 
     @Column(name = "ID_USUA_CREA", nullable = false, length = 30)
     private String usuarioCrea;
@@ -66,125 +70,7 @@ public class Respuesta {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getIdPersona() {
-		return idPersona;
-	}
-
-	public void setIdPersona(Long idPersona) {
-		this.idPersona = idPersona;
-	}
-
-	public Long getIdPregunta() {
-		return idPregunta;
-	}
-
-	public void setIdPregunta(Long idPregunta) {
-		this.idPregunta = idPregunta;
-	}
-
-	public Long getIdItem() {
-		return idItem;
-	}
-
-	public void setIdItem(Long idItem) {
-		this.idItem = idItem;
-	}
-
-	public Long getIdPlan() {
-		return idPlan;
-	}
-
-	public void setIdPlan(Long idPlan) {
-		this.idPlan = idPlan;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getUsuarioCrea() {
-		return usuarioCrea;
-	}
-
-	public void setUsuarioCrea(String usuarioCrea) {
-		this.usuarioCrea = usuarioCrea;
-	}
-
-	public Date getFechaCrea() {
-		return fechaCrea;
-	}
-
-	public void setFechaCrea(Date fechaCrea) {
-		this.fechaCrea = fechaCrea;
-	}
-
-	public String getTerminalCrea() {
-		return terminalCrea;
-	}
-
-	public void setTerminalCrea(String terminalCrea) {
-		this.terminalCrea = terminalCrea;
-	}
-
-	public String getUsuarioModi() {
-		return usuarioModi;
-	}
-
-	public void setUsuarioModi(String usuarioModi) {
-		this.usuarioModi = usuarioModi;
-	}
-
-	public Date getFechaModi() {
-		return fechaModi;
-	}
-
-	public void setFechaModi(Date fechaModi) {
-		this.fechaModi = fechaModi;
-	}
-
-	public String getTerminalModi() {
-		return terminalModi;
-	}
-
-	public void setTerminalModi(String terminalModi) {
-		this.terminalModi = terminalModi;
-	}
-
-	public Long getIdCuestionario() {
-		return idCuestionario;
-	}
-
-	public void setIdCuestionario(Long idCuestionario) {
-		this.idCuestionario = idCuestionario;
-	}
-
-	public String getPregunta() {
-		return pregunta;
-	}
-
-	public void setPregunta(String pregunta) {
-		this.pregunta = pregunta;
-	}
+	
 
     
 }

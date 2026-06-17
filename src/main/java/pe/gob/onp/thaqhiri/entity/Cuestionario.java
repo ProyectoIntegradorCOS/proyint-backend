@@ -1,8 +1,13 @@
 package pe.gob.onp.thaqhiri.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "CUESTIONARIO")
 public class Cuestionario {
@@ -21,7 +26,7 @@ public class Cuestionario {
 
     // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-16 10:51 UTC-5 (Lima)][desc: Soporta MaterialLocalizations para es_PE/es_ES (historial por fecha)][obj: Cuestionario.estado]
     @Column(name = "ST_REGI", nullable = false)
-    private String estado;
+    private Integer estado;
 
     @Column(name = "ID_USUA_CREA", nullable = false, length = 30)
     private String usuarioCrea;
@@ -42,87 +47,6 @@ public class Cuestionario {
 
     @Column(name = "DE_TERM_MODI",nullable = true, insertable = false, length = 30)
     private String terminalModi;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-
-	public String getUsuarioCrea() {
-		return usuarioCrea;
-	}
-
-	public void setUsuarioCrea(String usuarioCrea) {
-		this.usuarioCrea = usuarioCrea;
-	}
-
-	public Date getFechaCrea() {
-		return fechaCrea;
-	}
-
-	public void setFechaCrea(Date fechaCrea) {
-		this.fechaCrea = fechaCrea;
-	}
-
-	public String getTerminalCrea() {
-		return terminalCrea;
-	}
-
-	public void setTerminalCrea(String terminalCrea) {
-		this.terminalCrea = terminalCrea;
-	}
-
-	public String getUsuarioModi() {
-		return usuarioModi;
-	}
-
-	public void setUsuarioModi(String usuarioModi) {
-		this.usuarioModi = usuarioModi;
-	}
-
-	public Date getFechaModi() {
-		return fechaModi;
-	}
-
-	public void setFechaModi(Date fechaModi) {
-		this.fechaModi = fechaModi;
-	}
-
-	public String getTerminalModi() {
-		return terminalModi;
-	}
-
-	public void setTerminalModi(String terminalModi) {
-		this.terminalModi = terminalModi;
-	}
 
 	public Cuestionario() {
 		super();

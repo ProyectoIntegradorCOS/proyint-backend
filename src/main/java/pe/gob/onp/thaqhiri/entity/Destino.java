@@ -59,7 +59,7 @@ public class Destino {
 
     // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-16 10:51 UTC-5 (Lima)][desc: Soporta MaterialLocalizations para es_PE/es_ES (historial por fecha)][obj: Destino.estado]
     @Column(name = "ST_REGI", nullable = false)
-    private String estadoRegistro;
+    private Integer estadoRegistro;
     
     @Column(name = "IN_UBIC", length = 50)
     private String ubicabilidadOnp;

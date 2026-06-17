@@ -71,6 +71,6 @@ public class VisitItemReassignHistory {
 
     // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-21 14:43 UTC-5 (Lima)][desc: Estado logico en historial de reprogramacion][obj: VisitItemReassignHistory.stRegi]
     @Column(name = "ST_REGI", nullable = false)
-    private String stRegi;
+    private Integer stRegi;
 
 }

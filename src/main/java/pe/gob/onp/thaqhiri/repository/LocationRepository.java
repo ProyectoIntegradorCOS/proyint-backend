@@ -30,13 +30,13 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
             FROM Location l
             WHERE l.user = :user
             AND l.filteredOut = false
-              AND l.status = '1'
+              AND l.status = 1
               AND l.recordedAt = (
                 SELECT MAX(l2.recordedAt)
                 FROM Location l2
                 WHERE l2.user = :user
                 AND l2.filteredOut = false
-                AND l2.status = '1'
+                AND l2.status = 1
                 )
             ORDER BY l.id DESC
             FETCH FIRST 1 ROWS ONLY

@@ -67,7 +67,7 @@ public class Location {
 
     // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-16 10:51 UTC-5 (Lima)][desc: Soporta MaterialLocalizations para es_PE/es_ES (historial por fecha)][obj: Location.status]
     @Column(name = "ST_REGI", nullable = false, insertable = false)
-    private String status;
+    private Integer status;
 
     @Column(name = "ID_USUA_CREA", nullable = false, length = 30)
     private String createdBy;

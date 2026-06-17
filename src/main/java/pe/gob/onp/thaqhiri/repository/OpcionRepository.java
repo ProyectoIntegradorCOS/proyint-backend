@@ -13,16 +13,15 @@ import pe.gob.onp.thaqhiri.entity.Opcion;
 
 @Repository
 public interface OpcionRepository extends JpaRepository<Opcion, Long> {
-	
-	// Buscar todas las opciones de una pregunta específica
-    List<Opcion> findByIdPreguntaAndEstadoOrderByOrden(Long idPregunta, String estado);
-    
-    
-	@Modifying
+
+    List<Opcion> findByIdPreguntaAndEstadoOrderByOrden(Long idPregunta, Integer estado);
+
+
+    @Modifying
     @Transactional
     @Query("""
             UPDATE Opcion p
-               SET p.estado = '0',
+               SET p.estado = 0,
                    p.usuarioModi = :usuario,
                    p.terminalModi = :terminal
              WHERE p.id = :id
@@ -32,20 +31,18 @@ public interface OpcionRepository extends JpaRepository<Opcion, Long> {
             @Param("usuario") String usuario,
             @Param("terminal") String terminal
     );
-	
-	
-	@Modifying
-	@Query("""
-	    update Opcion o
-	    set o.estado = '0',
-	        o.usuarioModi = :usuario,
-	        o.terminalModi = :terminal
-	    where o.idPregunta = :idPregunta
-	      and o.estado = '1'
-	""")
-	void desactivarPorPregunta(@Param("idPregunta") Long idPregunta,
-	                           @Param("usuario") String usuario,
-	                           @Param("terminal") String terminal);
 
-	
+
+    @Modifying
+    @Query("""
+        update Opcion o
+        set o.estado = 0,
+            o.usuarioModi = :usuario,
+            o.terminalModi = :terminal
+        where o.idPregunta = :idPregunta
+          and o.estado = 1
+    """)
+    void desactivarPorPregunta(@Param("idPregunta") Long idPregunta,
+                               @Param("usuario") String usuario,
+                               @Param("terminal") String terminal);
 }
