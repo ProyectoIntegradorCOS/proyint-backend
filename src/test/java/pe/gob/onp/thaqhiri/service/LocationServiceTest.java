@@ -35,7 +35,7 @@ class LocationServiceTest {
         user.setUsuario("PJ");
         user.setNombre("Juan Perez");
         // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-21 15:01 UTC-5 (Lima)][desc: Ajusta estado a ST_REGI string][obj: LocationServiceTest.create_savesRecord]
-        user.setEstado("1");
+        user.setEstado(1);
         when(userService.getEntityBySaaSubject("abc")).thenReturn(user);
 
         Location saved = new Location();
@@ -64,7 +64,7 @@ class LocationServiceTest {
         user.setUsuario("PJ");
         user.setNombre("Juan Perez");
         // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-21 15:01 UTC-5 (Lima)][desc: Ajusta estado a ST_REGI string][obj: LocationServiceTest.history_usesRepositoryCalls]
-        user.setEstado("1");
+        user.setEstado(1);
         user.setId(10L);
         when(userService.getEntityBySaaSubject("abc")).thenReturn(user);
 
