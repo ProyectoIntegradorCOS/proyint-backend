@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ import java.util.Optional;
  * Servicio que implementa la lógica de negocio para la gestión de Equipos.
  */
 @Service
+@Slf4j
 public class EquipoService {
 
     @Autowired
@@ -92,6 +95,9 @@ public class EquipoService {
         }
         
         //Busca por nombres y equipo (2 filtros)
+        log.info("nombreEquipoBusqueda: "+nombreEquipoBusqueda);
+        log.info("supervisorNombreBusqueda: "+supervisorNombreBusqueda);
+        log.info("pageable: "+pageable);
     	pageResult = equipoRepository.buscarEquiposPaginado(nombreEquipoBusqueda, supervisorNombreBusqueda, pageable);
     	
     	long totalRegistros = pageResult.getTotalElements();
