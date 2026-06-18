@@ -20,7 +20,7 @@ public class UConstante {
 	public static String ORDEN_ASCENDENTE = "asc";
 	public static String ORDEN_DESCENDENTE = "des";
 	
-	/* Encabezados de las columnas de la plantilla XLS de carga masiva del plan de visitas */
+	// Encabezados de las columnas de la plantilla XLS de carga masiva del plan de visitas
 	public static String XLS_PLAN_NOMBRE_COLUMNA_COLABORADOR = "Colaborador";
 	public static String XLS_PLAN_NOMBRE_COLUMNA_FECHA_PLAN = "FechaPlan (dd/MM/yyyy)";
 	public static String XLS_PLAN_NOMBRE_COLUMNA_ORDEN = "Orden";
