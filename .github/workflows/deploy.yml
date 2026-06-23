@@ -15,6 +15,41 @@ env:
   APP_VERSION:    "0.1"
 
 jobs:
+  # ── 0. Security Scan ───────────────────────────────────────────────────────
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout (historia completa)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Trufflehog (detección de secretos)
+        uses: trufflesecurity/trufflehog@v3
+        with:
+          extra_args: --only-verified
+
+      - name: Semgrep (SAST)
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/java
+            p/owasp-top-ten
+          generateSarif: "1"
+        continue-on-error: true
+
+      - name: Publicar reporte Semgrep
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-report
+          path: semgrep.sarif
+          retention-days: 7
+
   # ── 1. Build & Push ────────────────────────────────────────────────────────
   ci:
     name: Build & Push
@@ -63,19 +98,41 @@ jobs:
           path: target/surefire-reports/
           retention-days: 7
 
-      - name: Build y Push
+      - name: Build imagen Docker
         run: |
           docker build \
             -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.meta.outputs.image_tag }} \
             -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest \
             .
+
+      # ── Seguridad: escaneo de vulnerabilidades ────────────────────────────
+      - name: Escaneo Trivy (CVEs)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.meta.outputs.image_tag }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Publicar reporte Trivy
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-security-report
+          path: trivy-results.sarif
+          retention-days: 7
+
+      - name: Push imagen a ECR
+        run: |
           docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.meta.outputs.image_tag }}
           docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
 
   # ── 2. Deploy Dev ──────────────────────────────────────────────────────────
   deploy-dev:
     name: Deploy → Dev
-    needs: ci
+    needs: [ci, security]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment: dev

@@ -39,13 +39,20 @@ La configuración de conexión a BD se lee de `src/main/resources/application.ym
 
 ## CI/CD
 
-El pipeline `.github/workflows/deploy.yml` ejecuta:
+El pipeline `.github/workflows/deploy.yml` ejecuta dos jobs en paralelo antes del deploy:
 
+**Security Scan** (paralelo con CI):
+- **Trufflehog**: detecta secretos y tokens hardcodeados en el código y git history — bloquea si encuentra hallazgos verificados
+- **Semgrep**: análisis estático de seguridad (SAST) con reglas Java + OWASP Top 10 — reporte descargable en *Artifacts* → `semgrep-report`
+
+**CI**:
 1. **Tests**: `mvn test` — resultados publicados como artefacto `test-results` descargable en cada ejecución (Actions → Run → sección *Artifacts*)
-2. **Build**: imagen Docker → push a ECR `thaqhiri-dev`
-3. **Deploy Dev**: SSH a EC2 dev → `docker pull` + `docker run` (automático al mergear a `main`)
-4. **Deploy QA**: requiere aprobación manual en GitHub Environment `qa`
-5. **Deploy Prod**: requiere aprobación manual en GitHub Environment `prod`
+2. **Build**: imagen Docker construida localmente
+3. **Trivy**: escaneo de CVEs `CRITICAL` sobre la imagen — falla el pipeline si encuentra vulnerabilidades con fix disponible (reporte descargable en *Artifacts* → `trivy-security-report`)
+4. **Push**: imagen → ECR `thaqhiri-dev` (solo si Trivy pasa)
+5. **Deploy Dev**: SSH a EC2 dev → `docker pull` + `docker run` (automático al mergear a `main`)
+6. **Deploy QA**: requiere aprobación manual en GitHub Environment `qa`
+7. **Deploy Prod**: requiere aprobación manual en GitHub Environment `prod`
 
 **Disparadores por rama (TBD):**
 - `feature/*` / `fix/*` → PR a `main` → solo CI (tests + build, sin deploy)
