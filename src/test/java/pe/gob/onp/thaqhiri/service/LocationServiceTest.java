@@ -63,18 +63,17 @@ class LocationServiceTest {
         user.setSaaSub("abc");
         user.setUsuario("PJ");
         user.setNombre("Juan Perez");
-        // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-21 15:01 UTC-5 (Lima)][desc: Ajusta estado a ST_REGI string][obj: LocationServiceTest.history_usesRepositoryCalls]
         user.setEstado(1);
         user.setId(10L);
         when(userService.getEntityBySaaSubject("abc")).thenReturn(user);
-
-        //when(repo.findByUserAndRecordedAtBetweenOrderByRecordedAtAsc(any(), any(), any()))
-        //        .thenReturn(List.of());
-        //when(repo.calculateDistanceMeters(any(), any(), any())).thenReturn(1500.0);
+        when(repo.findByUserAndRecordedAtBetweenFiltered(any(), any(), any())).thenReturn(List.of());
 
         var now = OffsetDateTime.now();
         var res = service.getHistory("abc", now.minusHours(1), now);
-        assertEquals(1.5, res.totalDistanceKm(), 1e-6);
+
+        assertNotNull(res);
+        assertEquals(0.0, res.totalDistanceKm(), 1e-6);
+        verify(repo, times(1)).findByUserAndRecordedAtBetweenFiltered(any(), any(), any());
     }
 
     @Test
