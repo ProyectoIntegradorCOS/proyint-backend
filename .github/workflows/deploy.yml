@@ -37,7 +37,9 @@ jobs:
           cache: maven
 
       - name: Ejecutar tests
-        run: ./mvnw test --no-transfer-progress
+        run: |
+          chmod +x mvnw
+          ./mvnw test --no-transfer-progress
 
       - name: Credenciales AWS (dev)
         uses: aws-actions/configure-aws-credentials@v4
