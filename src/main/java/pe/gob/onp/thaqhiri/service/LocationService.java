@@ -86,6 +86,9 @@ public class LocationService {
             String saaSubject = entry.getKey();
             List<LocationCreateRequest> requests = entry.getValue();
             User user = userService.getEntityBySaaSubject(saaSubject);
+            if (user == null) {
+                throw new RuntimeException("Usuario no encontrado: " + saaSubject);
+            }
             List<LocationCreateRequest> ordered = requests.stream()
                     .sorted(Comparator.comparing(LocationCreateRequest::timestamp))
                     .collect(Collectors.toList());
