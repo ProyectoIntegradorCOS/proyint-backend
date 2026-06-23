@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import pe.gob.onp.thaqhiri.repository.DestinoRepository;
+import pe.gob.onp.thaqhiri.util.UConstante;
 
 class VisitPlanServiceTest {
 
@@ -90,7 +91,7 @@ class VisitPlanServiceTest {
         plan.setStatus(VisitPlanStatus.PLANNED);
         
         // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-21 15:01 UTC-5 (Lima)][desc: Ajusta busqueda a metodo vigente en repositorio][obj: VisitPlanServiceTest.getPlanForVerifier_returnsAssignedPlan]
-        when(planRepository.findFirstByVerifierIdAndPlannedForOrderByCreatedAtDesc(2L, LocalDate.now()))
+        when(planRepository.findFirstByVerifierIdAndPlannedForAndStRegiOrderByCreatedAtDesc(2L, LocalDate.now(), UConstante.ACTIVO_REGI))
                 .thenReturn(Optional.of(plan));
 
         VisitPlanResponse resp = service.getPlanForVerifier(mockPrincipal("uid1"));
@@ -118,10 +119,10 @@ class VisitPlanServiceTest {
 
 	        when(itemRepository.findById(100L)).thenReturn(Optional.of(item));
 
-        //var req = new VisitItemCompleteRequest(true, false, null, "Info", null, null);
-        //VisitItemResponse resp = service.completeVisit(100L, req, mockPrincipal("uid1"), "prueba", "prueba");
+        var req = new VisitItemCompleteRequest(true, false, null, "Info", null, null, null);
+        VisitItemResponse resp = service.completeVisit(100L, req, mockPrincipal("uid1"), "prueba", "prueba");
 
-        //assertEquals(VisitItemState.DONE, resp.state());
+        assertEquals(VisitItemState.DONE, resp.state());
         verify(historyRepository).save(any());
     }
 
