@@ -55,6 +55,14 @@ jobs:
           echo "image_tag=$VERSION" >> $GITHUB_OUTPUT
           echo "Versión: $VERSION"
 
+      - name: Publicar resultados de tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: target/surefire-reports/
+          retention-days: 7
+
       - name: Build y Push
         run: |
           docker build \

@@ -1,5 +1,7 @@
 # proyint-backend
 
+![CI/CD](https://github.com/ProyectoIntegradorCOS/proyint-backend/actions/workflows/deploy.yml/badge.svg)
+
 Backend del proyecto **THAQHIRI** — API REST para el sistema de georreferenciación de la ONP. Desarrollado en Java 21 con Spring Boot 3.
 
 ## Tecnologías
@@ -39,10 +41,15 @@ La configuración de conexión a BD se lee de `src/main/resources/application.ym
 
 El pipeline `.github/workflows/deploy.yml` ejecuta:
 
-1. **Build**: `mvn package` → imagen Docker → push a ECR `thaqhiri-dev`
-2. **Deploy Dev**: SSH a EC2 dev → `docker pull` + `docker run` (automático)
-3. **Deploy QA**: requiere aprobación manual en GitHub Environment `qa`
-4. **Deploy Prod**: requiere aprobación manual en GitHub Environment `prod`
+1. **Tests**: `./mvnw test` — resultados publicados como artefacto `test-results` en cada ejecución
+2. **Build**: imagen Docker → push a ECR `thaqhiri-dev`
+3. **Deploy Dev**: SSH a EC2 dev → `docker pull` + `docker run` (automático al mergear a `main`)
+4. **Deploy QA**: requiere aprobación manual en GitHub Environment `qa`
+5. **Deploy Prod**: requiere aprobación manual en GitHub Environment `prod`
+
+**Disparadores por rama (TBD):**
+- `feature/*` / `fix/*` → PR a `main` → solo CI (tests + build, sin deploy)
+- Merge a `main` → CI + CD completo (Dev → QA → Prod)
 
 Se usa una única imagen Docker (`thaqhiri-dev`) para los 3 ambientes, diferenciada por variables de entorno en tiempo de ejecución.
 
