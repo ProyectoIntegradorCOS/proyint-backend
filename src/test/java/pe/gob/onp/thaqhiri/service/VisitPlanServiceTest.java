@@ -24,6 +24,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -91,7 +92,7 @@ class VisitPlanServiceTest {
         plan.setStatus(VisitPlanStatus.PLANNED);
         
         // [CHANGE][autor: cormenos@onp.gob.pe][fecha: 2026-01-21 15:01 UTC-5 (Lima)][desc: Ajusta busqueda a metodo vigente en repositorio][obj: VisitPlanServiceTest.getPlanForVerifier_returnsAssignedPlan]
-        when(planRepository.findFirstByVerifierIdAndPlannedForAndStRegiOrderByCreatedAtDesc(2L, LocalDate.now(), UConstante.ACTIVO_REGI))
+        when(planRepository.findFirstByVerifierIdAndPlannedForAndStRegiOrderByCreatedAtDesc(2L, LocalDate.now(ZoneId.of("America/Lima")), UConstante.ACTIVO_REGI))
                 .thenReturn(Optional.of(plan));
 
         VisitPlanResponse resp = service.getPlanForVerifier(mockPrincipal("uid1"));

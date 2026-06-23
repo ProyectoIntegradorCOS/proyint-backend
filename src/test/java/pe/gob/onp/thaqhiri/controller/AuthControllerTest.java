@@ -9,8 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import pe.gob.onp.thaqhiri.config.TestMeterConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
@@ -28,13 +29,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         })
 )
 @AutoConfigureMockMvc(addFilters = false)
+@Import(TestMeterConfig.class)
 class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private MeterRegistry meterRegistry;
 
     @MockBean
     private AuthService authService;
