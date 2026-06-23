@@ -41,7 +41,7 @@ La configuración de conexión a BD se lee de `src/main/resources/application.ym
 
 El pipeline `.github/workflows/deploy.yml` ejecuta:
 
-1. **Tests**: `./mvnw test` — resultados publicados como artefacto `test-results` en cada ejecución
+1. **Tests**: `mvn test` — resultados publicados como artefacto `test-results` descargable en cada ejecución (Actions → Run → sección *Artifacts*)
 2. **Build**: imagen Docker → push a ECR `thaqhiri-dev`
 3. **Deploy Dev**: SSH a EC2 dev → `docker pull` + `docker run` (automático al mergear a `main`)
 4. **Deploy QA**: requiere aprobación manual en GitHub Environment `qa`
