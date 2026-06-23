@@ -69,3 +69,13 @@ management:
     web:
       exposure:
         include: health,info,prometheus,metrics
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: ${OTEL_COLLECTOR_ENDPOINT:http://10.0.1.92:4318}/v1/traces
+    metrics:
+      export:
+        url: ${OTEL_COLLECTOR_ENDPOINT:http://10.0.1.92:4318}/v1/metrics
+        step: 30s
