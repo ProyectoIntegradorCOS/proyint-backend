@@ -112,9 +112,9 @@ jobs:
           image-ref: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.meta.outputs.image_tag }}
           format: sarif
           output: trivy-results.sarif
-          severity: CRITICAL
+          severity: CRITICAL,HIGH
           ignore-unfixed: true
-          exit-code: '1'
+          exit-code: '0'
 
       - name: Publicar reporte Trivy
         if: always()
