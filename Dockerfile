@@ -14,7 +14,7 @@ RUN mvn -B -q clean package -DskipTests
 # ---------- Runtime Stage ----------
 FROM docker.io/library/eclipse-temurin:21-jre-alpine
 
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -XX:+UseContainerSupport"
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=50.0 -XX:+UseContainerSupport -XX:+ExitOnOutOfMemoryError"
 
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
